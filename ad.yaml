@@ -1,0 +1,13 @@
+#this is what I got for the yaml so far. I didnt wrute the thing for the actual ad yet because you talked about using 3 jpgs and I didnt get the option for any other than one. 
+#Plus it wanted money, and I've never implimented a yaml so I wanted to ask you about that.
+
+description: "Lots of Rocks..."
+
+headline: "Rocks Galore"
+
+website: "https://geology.com/rocks/"
+
+days: 5
+
+photoSearch: "rock"
+
