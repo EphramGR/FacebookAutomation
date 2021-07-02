@@ -1,0 +1,32 @@
+title: "Title"
+
+#don't use decimal points, only raw numbers (ie: 20 -> $20)
+price: "4"
+
+categories: ["Tools", "Furniture", "Garden", "Appliances", "Video Games", "Books, Movies & Music", "Bags and Luggage", "Women's Clothing & Shoes", 
+"Men's Clothing & Shoes", "Jewelry & Accessories", "Health and Beauty", "Pet Supplies", "Baby & Kids", "Toys & Games", "Electronics & Computers", 
+"Mobile Phones", "Bicycles", "Arts & Crafts", "Sports & Outdoors", "Auto Parts", "Musical Instruments", "Antiques & Collectibles"]
+
+#copy and paste one of the above categories
+category: "Men's Clothing & Shoes"
+
+#below write a number form 1 to 4, 
+#1 = New, 2 = Used - Like New, 3 = Used - Good, 4 = Used - Fair
+condition: 4
+
+#optional (just add " " if you don't want it)
+description: "Description"
+
+#1 = you only have one, 2 = in stock (there are multiple)
+avalibility: 2
+
+#write anything in here that you want to have as a product tag
+productTags: ["TestTag1", "TestTag2"]
+
+location: " "
+
+photos: ["C:\\Users\\ephra\\OneDrive\\Pictures\\TestPhoto.png", "C:\\Users\\ephra\\OneDrive\\Pictures\\TestPhotoTwo.png", "C:\\Users\\ephra\\OneDrive\\Pictures\\TestPhotoTwo.png"]
+
+#put the size of the clothing in here, this is optional, if you dont want to do this, or if the item is not clothing, put it as "."
+#(S, XS, XL, M, etc)
+size: "M"
