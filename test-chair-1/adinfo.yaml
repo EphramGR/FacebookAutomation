@@ -46,7 +46,7 @@ avalibility: 2
 productTags: ["TestTag1", "TestTag2"]
 
 #put the file directory of your photos in here. make sure to double slash them. (IE: C:\\Users\\ephra\\OneDrive\\Pictures\\TestPhotoTwo.png)
-photos: ["C:\\Users\\ephra\\OneDrive\\Pictures\\TestPhoto.png", "C:\\Users\\ephra\\OneDrive\\Pictures\\TestPhotoTwo.png", "C:\\Users\\ephra\\OneDrive\\Pictures\\TestPhotoTwo.png"]
+photos: ["TestPhoto.png", "TestPhotoTwo.png", "TestPhotoTwo.png"]
 
 #put the size of the clothing in here, this is optional, if you dont want to do this, or if the item is not clothing, put it as "."
 #(S, XS, XL, M, etc)
