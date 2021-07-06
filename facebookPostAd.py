@@ -22,9 +22,11 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 import yaml
 
-#you are going to have to put your own file location to the .yaml in here
-with open(r'C:\Users\ephra\Documents\marketplaceAd.yaml') as stream:
+with open('marketplaceAd.yaml') as stream:
   adInfo = yaml.load(stream)
+
+with open('dump.yaml') as stream:
+  oldTitles = yaml.load(stream)
 
 title = adInfo['title']
 price = adInfo['price']
@@ -141,7 +143,14 @@ def adDropdown():
 
   driver.find_element(By.CSS_SELECTOR, category).click()
   driver.find_element(By.XPATH, "//div[7]/div/div/div/label/div/div/div/div").click()
-  driver.find_element(By.CSS_SELECTOR, condition).click()
+
+  try:
+    element = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, condition))
+    )
+    element.click()
+  except:
+    print("oops7")
 
   if (adInfo['category'] == "Women's Clothing & Shoes" or adInfo['category'] == "Men's Clothing & Shoes") and adInfo['size'] != ".":
     try:
@@ -194,8 +203,17 @@ def publish():
     element.click()
   except:
     print("oops5")
+    
+  write_yaml()
 
 
+def write_yaml():
+  oldTitles['previousTitles'].append(title)
+  with open("dump.yaml", 'w') as stream:
+    try:
+      yaml.dump(oldTitles, stream)
+    except:
+      print("oops6")
 
 
 login()

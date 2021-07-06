@@ -10,7 +10,10 @@ firefox: "C:\\Program Files\\Mozilla Firefox\\firefox.exe"
 #This is the path to your executable gecko driver file. Make sure to double slash (IE: C:\\Program Files (x86)\\geckodriver.exe)
 geckoDriver: "C:\\Program Files (x86)\\geckodriver.exe"
 
-title: "Title"
+
+#For making an Ad:
+
+title: "test"
 
 #don't use decimal points, only raw numbers (ie: 20 -> $20)
 price: "4"
@@ -48,3 +51,9 @@ photos: ["C:\\Users\\ephra\\OneDrive\\Pictures\\TestPhoto.png", "C:\\Users\\ephr
 #put the size of the clothing in here, this is optional, if you dont want to do this, or if the item is not clothing, put it as "."
 #(S, XS, XL, M, etc)
 size: "M"
+
+
+#For deleting an Ad:
+
+#this is the exact title of the product you want to delete (It should be the same as the 'title' you put above for the specific product that you want gone)(there is a list of your previously used titles on dump.yaml if you forget, spelling must be precise)
+Title: 'test'

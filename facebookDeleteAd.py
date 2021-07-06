@@ -22,15 +22,20 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 import yaml
 
-with open(r'C:\Users\ephra\Documents\marketplaceAd2.yaml') as stream:
+with open('marketplaceAd.yaml') as stream:
   adInfo = yaml.load(stream)
 
+with open('dump.yaml') as stream:
+  oldTitles = yaml.load(stream)
+
 options = Options()
-options.binary_location = r'C:\Program Files\Mozilla Firefox\firefox.exe'
-driver = webdriver.Firefox(executable_path=r'C:\Program Files (x86)\geckodriver.exe', firefox_options=options)
+options.binary_location = adInfo['firefox']
+driver = webdriver.Firefox(executable_path=adInfo['geckoDriver'], firefox_options=options)
 
 email = adInfo['loginEmail']
 password = adInfo['loginPassword']
+
+adRemove = "//div[@aria-label=\'" + str(adInfo['Title']) + "\']"
 
 def login():
   driver.get("https://www.facebook.com/")
@@ -56,6 +61,36 @@ def gotoMarketplace():
   except:
     print("oops")
 
+def removeAd():
+  time.sleep(1)
+  driver.find_element_by_xpath(adRemove).click()
+
+  try:
+    element = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, ".oqcyycmt:nth-child(2) > .oajrlxb2"))
+    )
+    element.click()
+
+    element = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, ".rq0escxv:nth-child(1) > .rq0escxv:nth-child(1) > .oajrlxb2 > .rq0escxv"))
+    )
+    element.click()
+
+  except:
+    print("oops2")
+
+  removePrevTitle()
+
+
+
+def removePrevTitle():
+  oldTitles['previousTitles'].remove(adInfo['Title'])
+  with open("dump.yaml", 'w') as stream:
+    try:
+      yaml.dump(oldTitles, stream)
+    except:
+      print("oops6")
 
 login()
 gotoMarketplace()
+removeAd()
