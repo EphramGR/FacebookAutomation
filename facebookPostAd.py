@@ -20,9 +20,23 @@ import pyautogui
 
 from selenium.webdriver.common.action_chains import ActionChains
 
-import yaml
+import yaml, sys
 
-with open('marketplaceAd.yaml') as stream:
+### Adapt this
+
+import argparse
+
+parser = argparse.ArgumentParser(description='Process some integers.')
+parser.add_argument('--addir',type=str, help='diectory of the ad to post')
+args = parser.parse_args()
+print(args)
+
+
+sys.exit(0)
+
+###
+
+with open('adinfo.yaml') as stream:
   adInfo = yaml.load(stream)
 
 with open('dump.yaml') as stream:
