@@ -13,7 +13,8 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from selenium.webdriver.firefox.options import Options
+#from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.chrome.options import Options
 
 import time
 import pyautogui
@@ -47,6 +48,13 @@ title = adInfo['title']
 price = adInfo['price']
 description = adInfo['description']
 productTags = adInfo['productTags']
+
+option = Options()
+
+driver = webdriver.Chrome(options=option)
+
+sys.exit(1)
+
 
 try:
   options = Options()
