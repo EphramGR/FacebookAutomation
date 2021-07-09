@@ -39,9 +39,12 @@ except:
 with open('marketplaceAd.yaml') as stream:
   adInfo = yaml.load(stream)
 
-options = Options()
-options.binary_location = adInfo['firefox']
-driver = webdriver.Firefox(executable_path=adInfo['geckoDriver'], firefox_options=options)
+try:
+  options = Options()
+  options.binary_location = adInfo['firefox']
+  driver = webdriver.Firefox(executable_path=adInfo['geckoDriver'], firefox_options=options)
+except:
+  print("Either the Firefox or GeckoDriver directory was invalid")
 
 email = adInfo['loginEmail']
 password = adInfo['loginPassword']
@@ -52,12 +55,24 @@ def login():
   try:
     driver.get("https://www.facebook.com/")
     driver.set_window_size(1527, 869)
+  except:
+    print("Could not go to given website")
+
+  try:
     driver.find_element(By.ID, "email").send_keys(email)
+  except:
+    print("Could not locate and/or send your given email to the email box")
+
+  try:
     driver.find_element(By.ID, "pass").click()
     driver.find_element(By.ID, "pass").send_keys(password)
+  except:
+    print("Could not locate and/or send your given password to the password box")
+
+  try:
     driver.find_element(By.NAME, "login").click()
   except:
-    print("Could not login")
+    print("Could not locate and/or click the login box")
 
 
 def gotoMarketplace():

@@ -31,20 +31,29 @@ args = parser.parse_args()
 
 fileDir = args.addir
 
+try:
+  os.chdir(fileDir)
+except:
+  print("Invalid directory")
 
+try:
+  with open('marketplaceAd.yaml') as stream:
+    adInfo = yaml.load(stream)
+except:
+  print("Could not locate the ad info yaml file")
 
-with open('marketplaceAd.yaml') as stream:
-  adInfo = yaml.load(stream)
 
 title = adInfo['title']
 price = adInfo['price']
 description = adInfo['description']
 productTags = adInfo['productTags']
 
-
-options = Options()
-options.binary_location = adInfo['firefox']
-driver = webdriver.Firefox(executable_path=adInfo['geckoDriver'], firefox_options=options)
+try:
+  options = Options()
+  options.binary_location = adInfo['firefox']
+  driver = webdriver.Firefox(executable_path=adInfo['geckoDriver'], firefox_options=options)
+except:
+  print("Either the Firefox or GeckoDriver directory was invalid")
 
 new = ".j83agx80 > .tojvnm2t > .oajrlxb2:nth-child(1)"
 likeNew = ".tojvnm2t > .oajrlxb2:nth-child(2)"
@@ -77,12 +86,27 @@ email = adInfo['loginEmail']
 password = adInfo['loginPassword']
 
 def login():
-  driver.get("https://www.facebook.com/")
-  driver.set_window_size(1527, 869)
-  driver.find_element(By.ID, "email").send_keys(email)
-  driver.find_element(By.ID, "pass").click()
-  driver.find_element(By.ID, "pass").send_keys(password)
-  driver.find_element(By.NAME, "login").click()
+  try:
+    driver.get("https://www.facebook.com/")
+    driver.set_window_size(1527, 869)
+  except:
+    print("Could not go to given website")
+
+  try:
+    driver.find_element(By.ID, "email").send_keys(email)
+  except:
+    print("Could not locate and/or send your given email to the email box")
+
+  try:
+    driver.find_element(By.ID, "pass").click()
+    driver.find_element(By.ID, "pass").send_keys(password)
+  except:
+    print("Could not locate and/or send your given password to the password box")
+
+  try:
+    driver.find_element(By.NAME, "login").click()
+  except:
+    print("Could not locate and/or click the login box")
 
 
 def gotoMarketplace():
@@ -91,19 +115,26 @@ def gotoMarketplace():
         EC.presence_of_element_located((By.LINK_TEXT, "Marketplace"))
     )
     element.click()
+  except:
+    print("Could not find and click the Marketplace button")
 
+  try:
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.LINK_TEXT, "Create New Listing"))
     )
     element.click() 
+  except:
+    print("Failed to navigate to create listing page")
 
+  try:
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, ".sonix8o1:nth-child(1) .j83agx80 > .oajrlxb2 > .j83agx80 .bp9cbjyn"))
     )
     element.click() 
-
   except:
-    print("Failed to navigate to create listing page")
+    print("Failed to locate/click the 'item for sale' button")
+
+
 
 
 def adTextboxes():
@@ -114,21 +145,29 @@ def adTextboxes():
     element.click()
   
     element.send_keys(title)
+  except:
+    print("Failed to input title into the title box")
 
+  try:
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//div[5]/div/div/label/div/div/input"))
     )
     element.click()
 
     element.send_keys(price)
+  except:
+    print("Failed to input price into the price box")
 
+  try:
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//textarea"))
     )
     element.click() 
 
     element.send_keys(description)
-
+  except:
+    print("Failed to input description into the description box")
+  try:
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//div[2]/textarea"))
     )
@@ -139,7 +178,7 @@ def adTextboxes():
       element.send_keys(Keys.ENTER)
 
   except:
-    print("Failed to input either the title, price, description, or product tags")
+    print("Failed to input the product tags")
 
 
 def adDropdown():
@@ -157,14 +196,16 @@ def adDropdown():
         EC.presence_of_element_located((By.CSS_SELECTOR, category))
     )
     element.click()
+  except:
+    print("Failed to locate category: " + str(adInfo['category']))
 
+  try:
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//div[7]/div/div/div/label/div/div/div/div"))
     )
     element.click()
-
   except:
-    print("Failed to locate the proper category, or click the condtion box")
+    print("Failed to click the condtion box")
 
   try:
     element = WebDriverWait(driver, 10).until(
@@ -182,7 +223,7 @@ def adDropdown():
       element.click()
       element.send_keys(adInfo['size'])
     except:
-      print("Failed to find or ad the proper size")
+      print("Failed to find or input the proper size")
 
   try:
     driver.find_element(By.XPATH, "//span/div/div/div/div/label/div/div/div/div").click()
@@ -244,5 +285,5 @@ adDropdown()
 
 adPhotos()
 
-publish()
+#publish()
 
