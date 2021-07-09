@@ -13,8 +13,8 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-#from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.firefox.options import Options
+#from selenium.webdriver.chrome.options import Options
 
 import time
 import pyautogui
@@ -49,17 +49,10 @@ price = adInfo['price']
 description = adInfo['description']
 productTags = adInfo['productTags']
 
-option = Options()
-
-driver = webdriver.Chrome(options=option)
-
-sys.exit(1)
-
-
 try:
   options = Options()
 #  options.binary_location = adInfo['firefox']
-  driver = webdriver.Chrome(options=options) ## executable_path=adInfo['geckoDriver'], 
+  driver = webdriver.Firefox(options=options) ## executable_path=adInfo['geckoDriver'], 
 except:
   print("ERROR 0001: Either the Firefox or GeckoDriver directory was invalid")
   sys.exit(1)
@@ -267,6 +260,7 @@ def adPhotos():
     print("Failed to navigate to the upload image screen")
 
   try:
+    print(f'DEBUG: {photos}')
     element.send_keys(photos)
 
     pyautogui.click(955, 21)
