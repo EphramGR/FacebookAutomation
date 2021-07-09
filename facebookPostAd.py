@@ -50,10 +50,11 @@ productTags = adInfo['productTags']
 
 try:
   options = Options()
-  options.binary_location = adInfo['firefox']
-  driver = webdriver.Firefox(executable_path=adInfo['geckoDriver'], firefox_options=options)
+#  options.binary_location = adInfo['firefox']
+  driver = webdriver.Chrome(options=options) ## executable_path=adInfo['geckoDriver'], 
 except:
-  print("Either the Firefox or GeckoDriver directory was invalid")
+  print("ERROR 0001: Either the Firefox or GeckoDriver directory was invalid")
+  sys.exit(1)
 
 new = ".j83agx80 > .tojvnm2t > .oajrlxb2:nth-child(1)"
 likeNew = ".tojvnm2t > .oajrlxb2:nth-child(2)"
@@ -122,7 +123,7 @@ def gotoMarketplace():
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.LINK_TEXT, "Create New Listing"))
     )
-    element.click() 
+    element.click()
   except:
     print("Failed to navigate to create listing page")
 
@@ -130,7 +131,7 @@ def gotoMarketplace():
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, ".sonix8o1:nth-child(1) .j83agx80 > .oajrlxb2 > .j83agx80 .bp9cbjyn"))
     )
-    element.click() 
+    element.click()
   except:
     print("Failed to locate/click the 'item for sale' button")
 
@@ -143,7 +144,7 @@ def adTextboxes():
         EC.presence_of_element_located((By.XPATH, "//label/div/div/input"))
     )
     element.click()
-  
+
     element.send_keys(title)
   except:
     print("Failed to input title into the title box")
@@ -162,7 +163,7 @@ def adTextboxes():
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//textarea"))
     )
-    element.click() 
+    element.click()
 
     element.send_keys(description)
   except:
@@ -171,7 +172,7 @@ def adTextboxes():
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//div[2]/textarea"))
     )
-    element.click() 
+    element.click()
 
     for x in range(len(productTags)):
       element.send_keys(productTags[x])
@@ -260,7 +261,7 @@ def adPhotos():
   try:
     element.send_keys(photos)
 
-    pyautogui.click(955, 21) 
+    pyautogui.click(955, 21)
   except:
     print("Failed to send keys to the image uploader, and/or close it.")
 
