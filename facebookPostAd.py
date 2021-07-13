@@ -40,7 +40,7 @@ except:
 
 try:
   with open('marketplaceAd.yaml') as stream:
-    adInfo = yaml.load(stream)
+    adInfo = yaml.load(stream, yaml.FullLoader)
 except:
   print("ERROR 0002: Could not locate the ad info yaml file")
   sys.exit()
@@ -53,8 +53,7 @@ productTags = adInfo['productTags']
 
 try:
   options = Options()
-#  options.binary_location = adInfo['firefox']
-  driver = webdriver.Firefox(options=options) ## executable_path=adInfo['geckoDriver'], 
+  driver = webdriver.Firefox(options=options) 
 except:
   print("ERROR 0003: Either the Firefox or GeckoDriver directory was invalid")
   sys.exit()
@@ -279,32 +278,25 @@ def adPhotos():
     h = ''.join(photos[x])
     f.append(h)
     
-
-  for x in range(len(adInfo['photos'])):
-    g = ''.join(f[x])
-    element.send_keys(g)
-    time.sleep(0.2)
-    
-    if x == 0:
-      pyautogui.press('escape')
-      time.sleep(0.2)    
-    
-    if x != len(adInfo['photos']):
-      for y in range(x):
-        pyautogui.click(x=175, y=363)
-        time.sleep(0.2)
-    
-  #while True:
-    #print(pyautogui.position())
-    
-
-  
   try:
-    #element.send_keys(f)
-
-    pyautogui.click(955, 21)
+    for x in range(len(adInfo['photos'])):
+      g = ''.join(f[x])
+      element.send_keys(g)
+      time.sleep(0.2)
+    
+      if x == 0:
+        pyautogui.press('escape')
+        time.sleep(0.2)    
+      try:
+        if x != len(adInfo['photos']):
+          for y in range(x):
+            driver.find_element(By.XPATH, "//div[2]/div/div/div/div/div[2]/div/div/i").click()
+            time.sleep(0.2)
+      except:
+        print("ERROR 0022: Failed to close duplicated photos")
+        sys.exit()
   except:
-    print("ERROR 0022: Failed to send keys to the image uploader, and/or close it.")
+    print("ERROR 0023: Failed to send keys to the image uploader, and/or close it.")
     sys.exit()
 
 def publish():
@@ -315,7 +307,7 @@ def publish():
     )
     element.click()
   except:
-    print("ERROR 0023: Failed to locate and/or click publish button")
+    print("ERROR 0024: Failed to locate and/or click publish button")
     sys.exit()
 
 
@@ -329,5 +321,5 @@ adDropdown()
 
 adPhotos()
 
-#publish()
+publish()
 

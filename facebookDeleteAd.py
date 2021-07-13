@@ -37,12 +37,11 @@ except:
   print("Invalid directory")
 
 with open('marketplaceAd.yaml') as stream:
-  adInfo = yaml.load(stream)
+  adInfo = yaml.load(stream, yaml.FullLoader)
 
 try:
   options = Options()
-  options.binary_location = adInfo['firefox']
-  driver = webdriver.Firefox(executable_path=adInfo['geckoDriver'], firefox_options=options)
+  driver = webdriver.Firefox(options=options)
 except:
   print("Either the Firefox or GeckoDriver directory was invalid")
 
