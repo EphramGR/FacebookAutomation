@@ -34,7 +34,8 @@ fileDir = args.addir
 try:
   os.chdir(fileDir)
 except:
-  print("Invalid directory")
+  print("ERROR 0001: Invalid directory")
+  sys.exit()
 
 with open('marketplaceAd.yaml') as stream:
   adInfo = yaml.load(stream, yaml.FullLoader)
@@ -43,35 +44,42 @@ try:
   options = Options()
   driver = webdriver.Firefox(options=options)
 except:
-  print("Either the Firefox or GeckoDriver directory was invalid")
+  print("ERROR 0002: Either the Firefox or GeckoDriver directory was invalid")
+  sys.exit()
 
 email = adInfo['loginEmail']
 password = adInfo['loginPassword']
 
 adRemove = "//div[@aria-label=\'" + str(adInfo['title']) + "\']"
 
+fourButtons = False
+
 def login():
   try:
     driver.get("https://www.facebook.com/")
     driver.set_window_size(1527, 869)
   except:
-    print("Could not go to given website")
+    print("ERROR 0003: Could not go to given website")
+    sys.exit()
 
   try:
     driver.find_element(By.ID, "email").send_keys(email)
   except:
-    print("Could not locate and/or send your given email to the email box")
+    print("ERROR 0004: Could not locate and/or send your given email to the email box")
+    sys.exit()
 
   try:
     driver.find_element(By.ID, "pass").click()
     driver.find_element(By.ID, "pass").send_keys(password)
   except:
-    print("Could not locate and/or send your given password to the password box")
+    print("ERROR 0005: Could not locate and/or send your given password to the password box")
+    sys.exit()
 
   try:
     driver.find_element(By.NAME, "login").click()
   except:
-    print("Could not locate and/or click the login box")
+    print("ERROR 0006: Could not locate and/or click the login box")
+    sys.exit()
 
 
 def gotoMarketplace():
@@ -87,28 +95,52 @@ def gotoMarketplace():
     element.click() 
 
   except:
-    print("Could not navigate to marketplace and/or your account")
+    print("ERROR 0007: Could not navigate to marketplace and/or your account")
+    sys.exit()
 
 def removeAd():
-  time.sleep(1)
-  try:
-    driver.find_element_by_xpath(adRemove).click()
-  except:
-    print("Could not find the ad that you want removed")
-
+  global fourButtons
   try:
     element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, ".oqcyycmt:nth-child(2) > .oajrlxb2"))
+        EC.presence_of_element_located((By.XPATH, adRemove))
     )
     element.click()
-
+  except:
+    print("ERROR 0008: Could not find the ad that you want removed")
+    sys.exit()
+  try:
+    element = WebDriverWait(driver, 3).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, ".oqcyycmt:nth-child(4) > .oajrlxb2"))
+    )
+    fourButtons = True
+  except:
+    try:
+      element = WebDriverWait(driver, 10).until(
+          EC.presence_of_element_located((By.CSS_SELECTOR, ".oqcyycmt:nth-child(2) > .oajrlxb2"))
+      )
+      element.click()
+    except:
+      print("ERROR 0009: Could not locate delete button")
+      sys.exit()
+  if fourButtons == True:
+    try:
+      element = WebDriverWait(driver, 10).until(
+          EC.presence_of_element_located((By.CSS_SELECTOR, ".oqcyycmt:nth-child(3) > .oajrlxb2"))
+      )
+      element.click()
+    except:
+      print("ERROR 0010: Could not locate delete button")
+      sys.exit()
+      
+  try:
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, ".rq0escxv:nth-child(1) > .rq0escxv:nth-child(1) > .oajrlxb2 > .rq0escxv"))
     )
     element.click()
 
   except:
-    print("Could not delete and confirm delete")
+    print("ERROR 0011: Could not confirm delete")
+    sys.exit()
 
 
 login()
