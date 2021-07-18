@@ -3,10 +3,10 @@ loginEmail: "marhpe36@gmail.com"
 loginPassword: "HrbvK2piw410ofLm"
 
 #For making an Ad:
-title: "test"
+title: "test ad two"
 
 #don't use decimal points, only raw numbers (ie: 20 -> $20)
-price: "4"
+price: "8"
 
 #This is where you can find all of the implemented categories to copy and paste into category
 categories: ["Furniture", "Household", "Garden", "Books, Movies & Music", "Women's Clothing & Shoes", "Men's Clothing & Shoes", "Baby & Kids", 

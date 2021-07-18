@@ -92,7 +92,7 @@ def gotoMarketplace():
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.LINK_TEXT, "Your Account"))
     )
-    element.click() 
+    element.click()
 
   except:
     print("ERROR 0007: Could not navigate to marketplace and/or your account")
@@ -131,7 +131,7 @@ def removeAd():
     except:
       print("ERROR 0010: Could not locate delete button")
       sys.exit()
-      
+
   try:
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, ".rq0escxv:nth-child(1) > .rq0escxv:nth-child(1) > .oajrlxb2 > .rq0escxv"))

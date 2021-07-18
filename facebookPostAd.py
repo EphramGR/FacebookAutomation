@@ -53,7 +53,7 @@ productTags = adInfo['productTags']
 
 try:
   options = Options()
-  driver = webdriver.Firefox(options=options) 
+  driver = webdriver.Firefox(options=options)
 except:
   print("ERROR 0003: Either the Firefox or GeckoDriver directory was invalid")
   sys.exit()
@@ -122,7 +122,7 @@ def gotoMarketplace():
   try:
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.LINK_TEXT, "Create New Listing"))
-        
+
     )
     element.click()
   except:
@@ -172,7 +172,7 @@ def adTextboxes():
     element.send_keys(description)
   except:
     print("ERROR 0013: Failed to input description into the description box")
-    
+
   try:
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//div[2]/textarea"))
@@ -277,16 +277,16 @@ def adPhotos():
 
     h = ''.join(photos[x])
     f.append(h)
-    
+
   try:
     for x in range(len(adInfo['photos'])):
       g = ''.join(f[x])
       element.send_keys(g)
       time.sleep(0.2)
-    
+
       if x == 0:
         pyautogui.press('escape')
-        time.sleep(0.2)    
+        time.sleep(0.2)
       try:
         if x != len(adInfo['photos']):
           for y in range(x):
