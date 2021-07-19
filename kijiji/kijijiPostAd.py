@@ -68,6 +68,42 @@ password = adInfo['loginPassword']
 
 ssidValue = "MTAyMzAzNzQwOHxleUowZVhBaU9pSktWMVFpTENKaGJHY2lPaUpJVXpVeE1pSjkuZXlKbGVIQWlPakUyTlRjNU9EUTBOalFzSW1saGRDSTZNVFl5TmpRME9EUTJOQ3dpYzNWaUlqb2lNVEF5TXpBek56UXdPQ0lzSW1WdFlXbHNJam9pYldGeWFIQmxNelpBWjIxaGFXd3VZMjl0SW4wLjJUMUtjUjBCZ1NZZGlrWUlrWkNXZ0dBbGw5NmtaOENHaGxiOFIxbTNGTmVPLUo0dmxJYU1tR2liYmlMYUg0UEoteWhiRU9ReUQ3NnFac0lGWXItS1Nn"
 
+
+categories = ["//span[contains(.,\'Arts & Collectibles\')]",
+"//span[contains(.,\'Audio\')]",
+"//span[contains(.,\'Baby Items\')]",
+"//span[contains(.,\'Bikes\')]",
+"//span[contains(.,\'Books\')]",
+"//span[contains(.,\'Business & Industrial\')]",
+"//span[contains(.,\'Cameras & Camcorders\')]",
+"//span[contains(.,\'CDs, DVDs & Blu-ray\')]",
+"//span[contains(.,\'Clothing\')]",
+"//span[contains(.,\'Computers\')]",
+"//span[contains(.,\'Computer Accessories\')]",
+"//span[contains(.,\'Electronics\')]",
+"//span[contains(.,\'Free Stuff\')]",
+"//span[contains(.,\'Furniture\')]",
+"//span[contains(.,\'Garage Sales\')]",
+"//span[contains(.,\'Health & Special Needs\')]",
+"//span[contains(.,\'Hobbies & Crafts\')]",
+"//span[contains(.,\'Home Appliances\')]",
+"//span[contains(.,\'Home - Indoor\')]",
+"//span[contains(.,\'Home - Outdoor & Garden\')]",
+"//span[contains(.,\'Home Renovation Materials\')]",
+"//span[contains(.,\'Jewellery & Watches\')]",
+"//span[contains(.,\'Musical Instruments\')]",
+"//span[contains(.,\'Phones\')]",
+"//span[contains(.,\'Sporting Goods & Exercise\')]",
+"//span[contains(.,\'Tools\')]",
+"//span[contains(.,\'Toys & Games\')]",
+"//span[contains(.,\'TVs & Video\')]",
+"//span[contains(.,\'Video Games & Consoles\')]",
+"//span[contains(.,\'Other\')]"]
+
+for x in range(len(adInfo['categories'])):
+  if adInfo['categories'][x] == adInfo['category']:
+    category = categories[x]
+
 def ssid():
 
   #requestJar = requests.cookies.RequestsCookieJar()
@@ -85,7 +121,7 @@ def ssid():
     print("ERROR 0004: Could not go to given website")
     sys.exit()
   
-  time.sleep(5)
+  time.sleep(2)
   pyautogui.keyDown('ctrl')
   pyautogui.keyDown('shift')
   pyautogui.keyDown('i')
@@ -101,18 +137,29 @@ def ssid():
   pyautogui.keyUp('shift')
   pyautogui.keyUp('f9')
 
+  time.sleep(1)
+  pyautogui.click(x=1395, y=691)
+  time.sleep(2)
+  pyautogui.doubleClick(x=610, y=884)
+  time.sleep(1)
+  pyautogui.doubleClick(x=666, y=883)
+  pyautogui.write(ssidValue)
+  pyautogui.doubleClick(x=596, y=873)
+  pyautogui.write("ssid")
+  pyautogui.press('enter')
+  pyautogui.click(x=1425, y=660)
+  pyautogui.press('f5')
   
-  while True:
-    print(pyautogui.position())
-    time.sleep(3)
   
-#def getPage():
+  #while True:
+    #print(pyautogui.position())
+    #time.sleep(3)
 
 #create new: (x=1395, y=691)
 #adress name: (x=610, y=884)
 #value: (x=666, y=883)
   
-def login():
+def createAd():
   try:
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.LINK_TEXT, "Post ad"))
@@ -124,37 +171,38 @@ def login():
       
   try:
     element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "emailOrNickname"))
+        EC.presence_of_element_located((By.ID, "AdTitleForm"))
     )
     element.click()
-    element.send_keys(adInfo['loginEmail'])
+    element.send_keys(adInfo['title'])
   except:
-    print("ERROR 0006: Could not input email")
-    sys.exit()
+    print("ERROR 0006: Could not input title")
     
   try:
     element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "password"))
+        EC.presence_of_element_located((By.XPATH, "//button"))
     )
     element.click()
-    element.send_keys(adInfo['loginPassword'])
   except:
-    print("ERROR 0007: Could not input password")
-    sys.exit()
+    print("ERROR 0007: Could not click next button")
     
   try:
     element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, ".signInButton-2798687440"))
+        EC.presence_of_element_located((By.XPATH, "//button[contains(.,'Buy & Sell')]"))
     )
     element.click()
   except:
-    print("ERROR 0008: Could not find and click the sign in button")
-    sys.exit()
-      
+    print("ERROR 0007: Could not click next button")
+    
+  try:
+    element = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, category))
+    )
+    element.click()
+  except:
+    print("ERROR 0008: Could not click the selected category")
 
 ssid()
 
-#getPage()
-
-#login()
+createAd()
 
