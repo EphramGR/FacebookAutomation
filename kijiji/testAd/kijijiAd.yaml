@@ -1,0 +1,19 @@
+#Your login info
+loginEmail: "marhpe36@gmail.com"
+loginPassword: "HrbvK2piw410ofLm$"
+
+ssidValue: "MTAyMzAzNzQwOHxleUowZVhBaU9pSktWMVFpTENKaGJHY2lPaUpJVXpVeE1pSjkuZXlKbGVIQWlPakUyTlRjNU9EUTBOalFzSW1saGRDSTZNVFl5TmpRME9EUTJOQ3dpYzNWaUlqb2lNVEF5TXpBek56UXdPQ0lzSW1WdFlXbHNJam9pYldGeWFIQmxNelpBWjIxaGFXd3VZMjl0SW4wLjJUMUtjUjBCZ1NZZGlrWUlrWkNXZ0dBbGw5NmtaOENHaGxiOFIxbTNGTmVPLUo0dmxJYU1tR2liYmlMYUg0UEoteWhiRU9ReUQ3NnFac0lGWXItS1Nn"
+
+#minimim 8 characters
+title: "TestTest"
+
+categories: ['Arts & Collectibles', 'Audio', 'Baby Items', 'Bikes', 'Books', 'Business & Industrial', 'Cameras & Camcorders', 
+'CDs, DVDs & Blu-ray', 'Clothing', 'Computers', 'Computer Accessories', 'Electronics', 'Free Stuff', 'Furniture', 'Garage Sales', 
+'Health & Special Needs', 'Hobbies & Crafts', 'Home Appliances', 'Home - Indoor', 'Home - Outdoor & Garden', 'Home Renovation Materials', 
+'Jewellery & Watches', 'Musical Instruments', 'Phones', 'Sporting Goods & Exercise', 'Tools', 'Toys & Games', 'TVs & Video', 
+'Video Games & Consoles', 'Other']
+
+#copy and paste one of the above categories
+category: 'Other'
+
+extra: ['Audio', 'Baby Items', 'Bikes', 'Books', 'Business & Industrial', 'Clothing', 'Computers', 'Computer Accessories', 'Electronics', 'Furniture', 'Home Appliances', 'Home - Indoor', 'Home - Outdoor & Garden', 'Home Renovation Materials', 'Musical Instruments', 'Phones', 'Sporting Goods & Exercise', 'Tools', 'TVs & Video'] 
