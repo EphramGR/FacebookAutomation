@@ -50,7 +50,7 @@ except:
 new = ".j83agx80 > .tojvnm2t > .oajrlxb2:nth-child(1)"
 likeNew = ".tojvnm2t > .oajrlxb2:nth-child(2)"
 good = ".oajrlxb2:nth-child(3) > .bp9cbjyn"
-air = ".oajrlxb2:nth-child(4) > .bp9cbjyn"
+fair = ".oajrlxb2:nth-child(4) > .bp9cbjyn"
 
 adInfo = ' '
 title = ' '
