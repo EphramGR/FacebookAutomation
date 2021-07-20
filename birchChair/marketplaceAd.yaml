@@ -1,0 +1,53 @@
+#Your login info
+loginEmail: "marhpe36@gmail.com"
+loginPassword: "HrbvK2piw410ofLm"
+
+#This will be differnt for every person that runs this code. But it will stay the same every time you run it.
+#just put your directory to Firefox in here. Make sure to double slash (IE: C:\\Program Files\\Mozilla Firefox\\firefox.exe)
+firefox: "Mozilla Firefox\\firefox.exe"
+
+#This will be differnt for every person that runs this code. But it will stay the same every time you run it.
+#This is the path to your executable gecko driver file. Make sure to double slash (IE: C:\\Program Files (x86)\\geckodriver.exe)
+geckoDriver: "geckodriver.exe"
+
+
+#For making an Ad:
+
+title: "Birch Chair"
+
+#don't use decimal points, only raw numbers (ie: 20 -> $20)
+price: "375"
+
+#This is where you can find all of the implimented categories to copy and paste into category
+categories: ["Furniture", "Household", "Garden", "Books, Movies & Music", "Women's Clothing & Shoes", "Men's Clothing & Shoes", "Baby & Kids", 
+"Toys & Games", "Arts & Crafts", "Health and Beauty", "Antiques & Collectibles", "Bicycles", "Electronics & Computers", "Sports & Outdoors"]
+
+#don't worry about this list, it is not to be edited
+categoriesTag: ["div:nth-child(3) .ow4ym5g4:nth-child(1) > .gs1a9yip", "div:nth-child(4) > .oajrlxb2 .ow4ym5g4:nth-child(1) > .gs1a9yip .j83agx80", 
+"div:nth-child(5) .ow4ym5g4:nth-child(1) > .gs1a9yip .j83agx80", "div:nth-child(9) > .oajrlxb2 .gs1a9yip .j83agx80", "div:nth-child(12) > .oajrlxb2 .gs1a9yip", 
+"div:nth-child(13) > .oajrlxb2 .gs1a9yip", "div:nth-child(18) > .oajrlxb2 .gs1a9yip .j83agx80", "div:nth-child(19) > .oajrlxb2 .gs1a9yip", 
+"div:nth-child(25) > .oajrlxb2 .gs1a9yip .j83agx80", "div:nth-child(16) > .oajrlxb2 .gs1a9yip .j83agx80", "div:nth-child(29) > .oajrlxb2 .gs1a9yip .j83agx80", 
+"div:nth-child(24) > .oajrlxb2 .gs1a9yip .j83agx80", "div:nth-child(21) > .oajrlxb2 .gs1a9yip .j83agx80", "div:nth-child(26) .ow4ym5g4:nth-child(1) > .gs1a9yip .j83agx80"]
+
+#copy and paste one of the above categories
+category: "Furniture"
+
+#below write a number form 1 to 4, 
+#1 = New, 2 = Used - Like New, 3 = Used - Good, 4 = Used - Fair
+condition: 2
+
+#optional (just add " " if you don't want it)
+description: "This is a birch chair"
+
+#1 = you only have one, 2 = in stock (there are multiple)
+avalibility: 1
+
+#write anything in here that you want to have as a product tag
+productTags: ["chair", "cheap"]
+
+#put the name of the photos that you want here
+photos: ["birchChair.jpeg"]
+
+#put the size of the clothing in here, this is optional, if you dont want to do this, or if the item is not clothing, put it as "."
+#(S, XS, XL, M, etc)
+size: "M"
