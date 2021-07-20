@@ -26,19 +26,18 @@ import argparse
 import os
 
 parser = argparse.ArgumentParser(description='Deleting an ad off Facebook')
-parser.add_argument('--addir',type=str, help='Diectory of the ad to delete, this is where the .yaml files are, and the photos you wanted to post. The geckoDriver and Mozzila package should be in there as well.')
+parser.add_argument('--addir',type=str, nargs="+", help='Diectory of the ad to delete, this is where the .yaml files are, and the photos you wanted to post. The geckoDriver and Mozzila package should be in there as well.')
 args = parser.parse_args()
 
 fileDir = args.addir
 
+cwd = os.getcwd()
+
 try:
-  os.chdir(fileDir)
+  os.chdir(fileDir[0])
 except:
   print("ERROR 0001: Invalid directory")
   sys.exit()
-
-with open('marketplaceAd.yaml') as stream:
-  adInfo = yaml.load(stream, yaml.FullLoader)
 
 try:
   options = Options()
@@ -47,12 +46,25 @@ except:
   print("ERROR 0002: Either the Firefox or GeckoDriver directory was invalid")
   sys.exit()
 
-email = adInfo['loginEmail']
-password = adInfo['loginPassword']
-
-adRemove = "//div[@aria-label=\'" + str(adInfo['title']) + "\']"
-
+adInfo = ' '
+email = ' '
+password = ' '
+adRemove = ' '
 fourButtons = False
+
+def setVar():
+  global adInfo, email, password, adRemove, fourButtons
+  
+  with open('marketplaceAd.yaml') as stream:
+    adInfo = yaml.load(stream, yaml.FullLoader)
+
+
+  email = adInfo['loginEmail']
+  password = adInfo['loginPassword']
+
+  adRemove = "//div[@aria-label=\'" + str(adInfo['title']) + "\']"
+
+  fourButtons = False
 
 def login():
   try:
@@ -92,7 +104,7 @@ def gotoMarketplace():
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.LINK_TEXT, "Your Account"))
     )
-    element.click()
+    element.click() 
 
   except:
     print("ERROR 0007: Could not navigate to marketplace and/or your account")
@@ -131,18 +143,49 @@ def removeAd():
     except:
       print("ERROR 0010: Could not locate delete button")
       sys.exit()
-
+      
   try:
     element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, ".rq0escxv:nth-child(1) > .rq0escxv:nth-child(1) > .oajrlxb2 > .rq0escxv"))
+        EC.presence_of_element_located((By.XPATH, "//div[4]/div/div/div/div/div/div/span/span"))
     )
     element.click()
 
   except:
     print("ERROR 0011: Could not confirm delete")
     sys.exit()
+    
+def changeCWD():
+  os.chdir(cwd)
+  os.chdir(fileDir[x])
 
+def home():
+  try:
+    element = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//span/div/a"))
+        )
 
-login()
-gotoMarketplace()
-removeAd()
+    element.click()
+  except:
+    print("ERROR 0025: Failed to click home button")
+  
+for x in range(len(fileDir)):
+  if x > 0:
+    changeCWD()
+    home()
+    
+  setVar()
+  
+  if x == 0:
+    login()
+  
+  gotoMarketplace()
+
+  removeAd()
+  
+  time.sleep(2)
+  
+  if x == ((len(fileDir)) - 1):
+    driver.quit()
+  
+  
+

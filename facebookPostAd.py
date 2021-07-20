@@ -27,33 +27,22 @@ import argparse
 import os
 
 parser = argparse.ArgumentParser(description='Posting an ad to Facebook')
-parser.add_argument('--addir',type=str, required=True, help='Diectory of the ad to post, this is where the .yaml files are, and the photos you want to post. The geckoDriver and Mozzila package should be in there as well.')
+parser.add_argument('--addir',type=str, required=True, nargs="+", help='Diectory of the ad to post, this is where the .yaml files are, and the photos you want to post. There can be multiple folders for multiple ads.')
 args = parser.parse_args()
 
 fileDir = args.addir
 
+cwd = os.getcwd()
+
 try:
-  os.chdir(fileDir)
+  os.chdir(fileDir[0])
 except:
   print("ERROR 0001: Invalid directory")
   sys.exit()
 
 try:
-  with open('marketplaceAd.yaml') as stream:
-    adInfo = yaml.load(stream, yaml.FullLoader)
-except:
-  print("ERROR 0002: Could not locate the ad info yaml file")
-  sys.exit()
-
-
-title = adInfo['title']
-price = adInfo['price']
-description = adInfo['description']
-productTags = adInfo['productTags']
-
-try:
   options = Options()
-  driver = webdriver.Firefox(options=options)
+  driver = webdriver.Firefox(options=options) 
 except:
   print("ERROR 0003: Either the Firefox or GeckoDriver directory was invalid")
   sys.exit()
@@ -61,25 +50,50 @@ except:
 new = ".j83agx80 > .tojvnm2t > .oajrlxb2:nth-child(1)"
 likeNew = ".tojvnm2t > .oajrlxb2:nth-child(2)"
 good = ".oajrlxb2:nth-child(3) > .bp9cbjyn"
-fair = ".oajrlxb2:nth-child(4) > .bp9cbjyn"
+air = ".oajrlxb2:nth-child(4) > .bp9cbjyn"
 
-photos = [[],[],[],[],[],[],[],[],[],[]]
+adInfo = ' '
+title = ' '
+price = ' '
+description = ' '
+productTags = []
+photos = []
+category = ' '
+condition = ' '
+email = ' '
+password = ' '
 
-for x in range(len(adInfo['categories'])):
-  if adInfo['categories'][x] == adInfo['category']:
-    category = adInfo['categoriesTag'][x]
+def setVar():
+  global adInfo, title, price, description, productTags, photos, category, condition, email, password
+  try:
+    with open('marketplaceAd.yaml') as stream:
+      adInfo = yaml.load(stream, yaml.FullLoader)
+  except:
+    print("ERROR 0002: Could not locate the ad info yaml file")
+    sys.exit()
 
-if adInfo['condition'] == 1:
-  condition = new
-elif adInfo['condition'] == 2:
-  condition = likeNew
-elif adInfo['condition'] == 3:
-  condition = good
-elif adInfo['condition'] == 4:
-  condition = fair
+  title = adInfo['title']
+  price = adInfo['price']
+  description = adInfo['description']
+  productTags = adInfo['productTags']
 
-email = adInfo['loginEmail']
-password = adInfo['loginPassword']
+  photos = [[],[],[],[],[],[],[],[],[],[]]
+
+  for x in range(len(adInfo['categories'])):
+    if adInfo['categories'][x] == adInfo['category']:
+      category = adInfo['categoriesTag'][x]
+
+  if adInfo['condition'] == 1:
+    condition = new
+  elif adInfo['condition'] == 2:
+    condition = likeNew
+  elif adInfo['condition'] == 3:
+    condition = good
+  elif adInfo['condition'] == 4:
+    condition = fair
+
+  email = adInfo['loginEmail']
+  password = adInfo['loginPassword']
 
 def login():
   try:
@@ -110,6 +124,7 @@ def login():
 
 
 def gotoMarketplace():
+
   try:
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.LINK_TEXT, "Marketplace"))
@@ -122,7 +137,7 @@ def gotoMarketplace():
   try:
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.LINK_TEXT, "Create New Listing"))
-
+        
     )
     element.click()
   except:
@@ -131,7 +146,7 @@ def gotoMarketplace():
 
   try:
     element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, ".sonix8o1:nth-child(1) .j83agx80 > .oajrlxb2 > .j83agx80 .bp9cbjyn"))
+        EC.presence_of_element_located((By.XPATH, "//span/div/a/div/div/div"))
     )
     element.click()
   except:
@@ -172,7 +187,7 @@ def adTextboxes():
     element.send_keys(description)
   except:
     print("ERROR 0013: Failed to input description into the description box")
-
+    
   try:
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//div[2]/textarea"))
@@ -277,16 +292,16 @@ def adPhotos():
 
     h = ''.join(photos[x])
     f.append(h)
-
+    
   try:
     for x in range(len(adInfo['photos'])):
       g = ''.join(f[x])
       element.send_keys(g)
       time.sleep(0.2)
-
+    
       if x == 0:
         pyautogui.press('escape')
-        time.sleep(0.2)
+        time.sleep(0.2)    
       try:
         if x != len(adInfo['photos']):
           for y in range(x):
@@ -309,17 +324,49 @@ def publish():
   except:
     print("ERROR 0024: Failed to locate and/or click publish button")
     sys.exit()
+    
+def home():
+  try:
+    element = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//div[3]/div/div[2]/div/div/div[3]/div[2]/div/div/div"))
+        )
+
+    element.click()
+  except:
+    print("ERROR 0025: Failed to click home button")
 
 
-login()
+def changeCWD():
+  os.chdir(cwd)
+  os.chdir(fileDir[x])
 
-gotoMarketplace()
+for x in range(len(fileDir)):
+  if x > 0:
+    changeCWD()
+    home()
+    
+  setVar()
+  
+  if x == 0:
+    login()
 
-adTextboxes()
+  gotoMarketplace()
 
-adDropdown()
+  adTextboxes()
 
-adPhotos()
+  adDropdown()
 
-publish()
+  adPhotos()
+
+  publish()
+  
+  try:
+    element = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//div[3]/div/div[2]/div/div/div[3]/div[2]/div/div/div"))
+        )
+  except:
+    print("ERROR 0026: Failed to locate home button")
+  
+  if x == (len(fileDir) - 1):
+    driver.quit()
 
