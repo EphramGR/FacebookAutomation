@@ -277,7 +277,7 @@ while moreAds == True:
   pyautogui.press('left')
   pyautogui.keyUp('alt')
   
-sys.exit()
+#sys.exit()
 
 
 
