@@ -26,7 +26,7 @@ import argparse
 import os
 
 parser = argparse.ArgumentParser(description='Deleting an ad off Facebook')
-parser.add_argument('--addir',type=str, help='Diectory of the folder with the .yaml file for your login info, and the dump.yaml file.')
+parser.add_argument('--addir',type=str, help='Diectory of the folder with the .yaml file for your login info, and where you want the dump.yaml files to be created.')
 args = parser.parse_args()
 
 fileDir = args.addir
@@ -48,14 +48,44 @@ except:
 email = adInfo['loginEmail']
 password = adInfo['loginPassword']
 
-def login():
-  driver.get("https://www.facebook.com/")
-  driver.set_window_size(1527, 869)
-  driver.find_element(By.ID, "email").send_keys(email)
-  driver.find_element(By.ID, "pass").click()
-  driver.find_element(By.ID, "pass").send_keys(password)
-  driver.find_element(By.NAME, "login").click()
+titleValue = ''
+priceValue = ''
+descValue = ''
+conditionValue = ''
+categoryValue = ''
+imageValue = ''
+tagValue = ''
+stockValue = ''
+adFile = ''
+moreAds = True
+counter = 0
 
+def login():
+  try:
+    driver.get("https://www.facebook.com/")
+    driver.set_window_size(1527, 869)
+  except:
+    print("ERROR 0004: Could not go to given website")
+    sys.exit()
+
+  try:
+    driver.find_element(By.ID, "email").send_keys(email)
+  except:
+    print("ERROR 0005: Could not locate and/or send your given email to the email box")
+    sys.exit()
+
+  try:
+    driver.find_element(By.ID, "pass").click()
+    driver.find_element(By.ID, "pass").send_keys(password)
+  except:
+    print("ERROR 0006: Could not locate and/or send your given password to the password box")
+    sys.exit()
+
+  try:
+    driver.find_element(By.NAME, "login").click()
+  except:
+    print("ERROR 0007: Could not locate and/or click the login box")
+    sys.exit()
 
 def gotoMarketplace():
   try:
@@ -63,28 +93,37 @@ def gotoMarketplace():
         EC.presence_of_element_located((By.LINK_TEXT, "Marketplace"))
     )
     element.click()
-
+  except:
+    print("ERROR 0008: Could not locate and/or click the marketplace button")
+    sys.exit()
+  try:
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.LINK_TEXT, "Your Account"))
     )
     element.click()  
 
   except:
-    print("oops")
+    print("ERROR 0009: Could not locate and/or click the 'Your Account' button")
+    sys.exit()
 
 def getAds():
+  global titleValue, priceValue, descValue, conditionValue, categoryValue, imageValue, tagValue, stockValue, counter, moreAds
+
+  specificAdBroke = "//div[", str(counter + 1), "]/div/div[2]/div/div[2]/div/div[4]/div/div/div"
+  specificAd = ''.join(specificAdBroke)
 
   try:
     element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "//div[2]/div/div[2]/div/div[2]/div/div[4]/div/div/div")) 
+        EC.presence_of_element_located((By.XPATH, specificAd)) 
     )
     element.click()
   except:
-    print("oops2")
+    if counter == 1:
+      print("ERROR 0010: Could not locate any posted ads")
+      sys.exit()
+    moreAds = False
+    return
     
-  #driver.find_element(By.XPATH, "//div[2]/div/div[2]/div/div[2]/div/div[4]/div/div/div").click() #ad one
-  #driver.find_element(By.XPATH, "//div[3]/div/div[2]/div/div[2]/div/div[4]/div/div/div").click() #ad two
-  #driver.find_element(By.XPATH, "//div[x]/div/div[2]/div/div[2]/div/div[4]/div/div/div").click() #ad swap
   
   try:
     element = WebDriverWait(driver, 10).until(
@@ -92,59 +131,60 @@ def getAds():
     )
     element.click()
   except:
-    print("oops3")
+    print("ERROR 0011: Could not locate and/or click the edit listing button")
+    sys.exit()
     
   try:
     title = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//div/input")) 
     )
   except:
-    print("oops4")
+    print("ERROR 0012: Could not locate the title value")
+    sys.exit()
   
   titleValue = title.get_attribute("value"); 
-  print(titleValue)
 
   try:
     price = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//div[5]/div/div/label/div/div/input")) 
     )
   except:
-    print("oops5")
+    print("ERROR 0013: Could not locate the price value")
+    sys.exit()
     
   priceValue = price.get_attribute("value"); 
-  print(priceValue)
   
   try:
     desc = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//textarea")) 
     )
   except:
-    print("oops6")
+    print("ERROR 0014: Could not locate the description value")
+    sys.exit()
 
   descValue = desc.get_attribute("value");
-  print(descValue)
 
   try:
     condition = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//div[7]/div/div/div/label/div/div/div/div/span")) 
     )
   except:
-    print("oops7")
+    print("ERROR 0015: Could not locate the condition value")
+    sys.exit()
 
   conditionValue = condition.get_attribute("innerText");
-  print(conditionValue)
 
   try:
     category = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//label/div/div/div/div/span")) 
     )
   except:
-    print("oops8")
+    print("ERROR 0016: Could not locate the category value")
+    sys.exit()
 
   categoryValue = category.get_attribute("innerText");
-  print(categoryValue)
 
-  imageValue = ['','','','','','','','','','']
+  imageValue = []
   for x in range(10):
     if x == 0:
       try:
@@ -152,7 +192,8 @@ def getAds():
             EC.presence_of_element_located((By.XPATH, "//div[3]/div[2]/div/div/div/div/div/img")) 
         )
       except:
-        print("oops9 ", x)
+        print("ERROR 0017: Could not locate a single image")
+        sys.exit()
 
     imagePathBroke = "//div[", str(x + 1), "]/div/div/div/img"
     imagePathJoin = ''.join(imagePathBroke)
@@ -164,10 +205,7 @@ def getAds():
         )
       except:
         break   
-    
-
-    imageValue[x] = image.get_attribute("src");
-  print(imageValue)
+    imageValue.append(image.get_attribute("src"))
 
   y = True
   x = 0
@@ -180,7 +218,8 @@ def getAds():
             EC.presence_of_element_located((By.XPATH, "//label/div/div/div/div/div/div/div/span/span")) 
         )
       except:
-        print("oops10 ", x)
+        print("ERROR 0018: Could not locate a single tag.")
+        print("If your ad does not have tags ignore this error message")
 
     tagPathBroke = "//div[", str(x), "]/div/span/span"
     tagPathJoin = ''.join(tagPathBroke)
@@ -191,24 +230,54 @@ def getAds():
             EC.presence_of_element_located((By.XPATH, tagPathJoin)) 
         )
       except:
-        break   
-        
-    tagValue.append(tag.get_attribute("innerText"))
-      
-  print(tagValue)
+        break    
+    try: 
+      tagValue.append(tag.get_attribute("innerText"))
+    except:
+      tagValue.append("None")
   
   try:
     stock = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//span/div/div/div/div/label/div/div/div/div/span")) 
     )
   except:
-    print("oops11")
+    print("ERROR 0019: Could not locate the stock value")
+    sys.exit()
     
   stockValue = stock.get_attribute("innerText"); 
-  print(stockValue)
+
+def makeAdFile():
+  global adFile
+  adFile = [{'title': titleValue}, {'price': priceValue}, {'description': descValue}, {'condition': conditionValue}, {'category': categoryValue}, {'photos': imageValue}, {'tags': tagValue}, {'stock': stockValue}]
+
+def dump():
+  global counter, adFile
+  
+  yamlBroke = 'adDump', str(counter), '.yaml'
+  yamlJoin = ''.join(yamlBroke)
+
+  try:
+    with open(yamlJoin, 'x') as file:
+      documents = yaml.dump(adFile, file)
+  except:
+    print("ERROR 0020: Could not create ", str(yamlJoin), " file. If this file already exists in your directory, delete it and try again")
+    sys.exit()
 
 login()
 gotoMarketplace()
-getAds()
+while moreAds == True:
+  counter += 1
+  getAds()
+  if moreAds == False:
+    break
+  makeAdFile()
+  dump()
+  
+  pyautogui.keyDown('alt')
+  pyautogui.press('left')
+  pyautogui.keyUp('alt')
+  
+sys.exit()
+
 
 
