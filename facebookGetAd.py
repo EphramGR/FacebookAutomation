@@ -24,6 +24,8 @@ import yaml, sys
 
 import argparse
 import os
+import requests 
+import shutil 
 
 parser = argparse.ArgumentParser(description='Deleting an ad off Facebook')
 parser.add_argument('--addir',type=str, help='Diectory of the folder with the .yaml file for your login info, and where you want the dump.yaml files to be created.')
@@ -33,6 +35,7 @@ fileDir = args.addir
 
 try:
   os.chdir(fileDir)
+  osDir = os.getcwd()
 except:
   print("Invalid directory")
 
@@ -133,7 +136,7 @@ def getAds():
   except:
     print("ERROR 0011: Could not locate and/or click the edit listing button")
     sys.exit()
-    
+  print('looking for title value')
   try:
     title = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//div/input")) 
@@ -141,9 +144,9 @@ def getAds():
   except:
     print("ERROR 0012: Could not locate the title value")
     sys.exit()
-  
+  print('found title value')
   titleValue = title.get_attribute("value"); 
-
+  print('looking for price value')
   try:
     price = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//div[5]/div/div/label/div/div/input")) 
@@ -151,9 +154,9 @@ def getAds():
   except:
     print("ERROR 0013: Could not locate the price value")
     sys.exit()
-    
+  print('found price value')  
   priceValue = price.get_attribute("value"); 
-  
+  print('looking for description value')
   try:
     desc = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//textarea")) 
@@ -161,9 +164,9 @@ def getAds():
   except:
     print("ERROR 0014: Could not locate the description value")
     sys.exit()
-
+  print('found description value')
   descValue = desc.get_attribute("value");
-
+  print('looking for condition value')
   try:
     condition = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//div[7]/div/div/div/label/div/div/div/div/span")) 
@@ -171,9 +174,9 @@ def getAds():
   except:
     print("ERROR 0015: Could not locate the condition value")
     sys.exit()
-
+  print('found condition value')
   conditionValue = condition.get_attribute("innerText");
-
+  print('looking for category value')
   try:
     category = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//label/div/div/div/div/span")) 
@@ -181,9 +184,9 @@ def getAds():
   except:
     print("ERROR 0016: Could not locate the category value")
     sys.exit()
-
+  print('found category value')
   categoryValue = category.get_attribute("innerText");
-
+  print('looking for image value(s)')
   imageValue = []
   for x in range(10):
     if x == 0:
@@ -206,7 +209,10 @@ def getAds():
       except:
         break   
     imageValue.append(image.get_attribute("src"))
-
+    
+  print('found image value(s)')
+  print('looking for potential tag value(s)')
+  
   y = True
   x = 0
   tagValue = []
@@ -233,8 +239,12 @@ def getAds():
         break    
     try: 
       tagValue.append(tag.get_attribute("innerText"))
+      print(str(x), 'tag value(s) found')
     except:
       tagValue.append("None")
+      print('no tag values found')
+      
+  print('looking for stock value')
   
   try:
     stock = WebDriverWait(driver, 10).until(
@@ -243,18 +253,26 @@ def getAds():
   except:
     print("ERROR 0019: Could not locate the stock value")
     sys.exit()
-    
+  print('found stock value')  
   stockValue = stock.get_attribute("innerText"); 
 
 def makeAdFile():
   global adFile
   adFile = [{'title': titleValue}, {'price': priceValue}, {'description': descValue}, {'condition': conditionValue}, {'category': categoryValue}, {'photos': imageValue}, {'tags': tagValue}, {'stock': stockValue}]
 
+def makeAdDir():
+  adDirBroke = 'adDir', str(counter)
+  adDir = ''.join(adDirBroke)
+  os.mkdir(adDir)
+  os.chdir(adDir)
+
 def dump():
-  global counter, adFile
+  global counter, adFile, osDir
   
   yamlBroke = 'adDump', str(counter), '.yaml'
   yamlJoin = ''.join(yamlBroke)
+  
+  imageSave()
 
   try:
     with open(yamlJoin, 'x') as file:
@@ -262,6 +280,26 @@ def dump():
   except:
     print("ERROR 0020: Could not create ", str(yamlJoin), " file. If this file already exists in your directory, delete it and try again")
     sys.exit()
+  os.chdir(osDir)
+  
+def imageSave():
+  for x in range(len(imageValue)):
+
+    fileNameBroke = 'adPhoto', str(x)
+    fileName = ''.join(fileNameBroke)
+    r = requests.get(imageValue[x], stream = True)
+
+    if r.status_code == 200:
+        r.raw.decode_content = True
+    
+        with open(fileName,'wb') as f:
+            shutil.copyfileobj(r.raw, f)
+        
+        print('Image ', str(x + 1), ' sucessfully Downloaded')
+    else:
+        print('Image ', str(x + 1), ' Couldn\'t be retreived')
+
+
 
 login()
 gotoMarketplace()
@@ -271,13 +309,14 @@ while moreAds == True:
   if moreAds == False:
     break
   makeAdFile()
+  makeAdDir()
   dump()
   
   pyautogui.keyDown('alt')
   pyautogui.press('left')
   pyautogui.keyUp('alt')
   
-#sys.exit()
+sys.exit()
 
 
 
