@@ -47,10 +47,11 @@ except:
   print("ERROR 0003: Either the Firefox or GeckoDriver directory was invalid")
   sys.exit()
 
-new = ".j83agx80 > .tojvnm2t > .oajrlxb2:nth-child(1)"
-likeNew = ".tojvnm2t > .oajrlxb2:nth-child(2)"
-good = ".oajrlxb2:nth-child(3) > .bp9cbjyn"
-fair = ".oajrlxb2:nth-child(4) > .bp9cbjyn"
+new = "//div[4]/div/div[2]/div/div/div[4]/div/div/div/div/div/div/div/div/div/div/div/div/div/div/span"
+likeNew = "//div[2]/div/div/div[4]/div/div/div/div/div/div/div/div/div/div/div[2]/div/div/div/span"
+good = "//div[4]/div/div[2]/div/div/div[4]/div/div/div/div/div/div/div/div/div/div/div[3]/div/div/div/span"
+fair = "//div[4]/div/div/div/div/div/div/div/div/div/div/div[4]/div/div/div/span"
+
 
 adInfo = ' '
 title = ' '
@@ -233,7 +234,7 @@ def adDropdown():
 
   try:
     element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, condition))
+        EC.presence_of_element_located((By.XPATH, condition))
     )
     element.click()
   except:
@@ -282,37 +283,10 @@ def adPhotos():
     print("ERROR 0021: Failed to navigate to the upload image screen")
     sys.exit()
 
-  f = []
+  element.send_keys('/home/ephram/FacebookAutomation/testItem/TestPhoto.png/')
 
-  for x in range(len(adInfo['photos'])):
-    photos[x].append(os.getcwd())
-    photos[x].append('/')
-    photos[x].append(adInfo['photos'][x])
-    photos[x].append('/')
+  #postPhoto(element)
 
-    h = ''.join(photos[x])
-    f.append(h)
-    
-  try:
-    for x in range(len(adInfo['photos'])):
-      g = ''.join(f[x])
-      element.send_keys(g)
-      time.sleep(0.2)
-    
-      if x == 0:
-        pyautogui.press('escape')
-        time.sleep(0.2)    
-      try:
-        if x != len(adInfo['photos']):
-          for y in range(x):
-            driver.find_element(By.XPATH, "//div[2]/div/div/div/div/div[2]/div/div/i").click()
-            time.sleep(0.2)
-      except:
-        print("ERROR 0022: Failed to close duplicated photos")
-        sys.exit()
-  except:
-    print("ERROR 0023: Failed to send keys to the image uploader, and/or close it.")
-    sys.exit()
 
 def publish():
   time.sleep(3)
@@ -340,6 +314,44 @@ def changeCWD():
   os.chdir(cwd)
   os.chdir(fileDir[x])
 
+def postPhoto(element):
+  f = []
+
+  for x in range(len(adInfo['photos'])):
+    photos[x].append(os.getcwd())
+    photos[x].append('/')
+    photos[x].append(adInfo['photos'][x])
+    photos[x].append('/')
+
+    h = ''.join(photos[x])
+    f.append(h)
+    
+  try:
+    for x in range(len(adInfo['photos'])):
+      try:
+        g = ''.join(f[x])
+        print(g)
+        element.send_keys(g)
+        time.sleep(0.2)
+      except:
+        print("ERROR 0027: Failed to send keys to the image uploader")
+    
+      if x == 0:
+        pyautogui.press('escape')
+        time.sleep(0.2)    
+      try:
+        if x != len(adInfo['photos']):
+          for y in range(x):
+            driver.find_element(By.XPATH, "//div[2]/div/div/div/div/div[2]/div/div/i").click()
+            time.sleep(0.2)
+      except:
+        print("ERROR 0022: Failed to close duplicated photos")
+        sys.exit()
+  except:
+    print("ERROR 0023: Failed to send keys to the image uploader, and/or close it.")
+    sys.exit()
+
+
 for x in range(len(fileDir)):
   if x > 0:
     changeCWD()
@@ -358,7 +370,7 @@ for x in range(len(fileDir)):
 
   adPhotos()
 
-  publish()
+  #publish()
   
   try:
     element = WebDriverWait(driver, 10).until(
@@ -367,6 +379,5 @@ for x in range(len(fileDir)):
   except:
     print("ERROR 0026: Failed to locate home button")
   
-  if x == (len(fileDir) - 1):
-    driver.quit()
-
+  #if x == (len(fileDir) - 1):
+    #driver.quit()

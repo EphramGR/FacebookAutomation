@@ -116,7 +116,7 @@ def getAds():
   specificAd = ''.join(specificAdBroke)
 
   try:
-    element = WebDriverWait(driver, 10).until(
+    element = WebDriverWait(driver, 1).until(
         EC.presence_of_element_located((By.XPATH, specificAd)) 
     )
     element.click()
@@ -158,7 +158,7 @@ def getAds():
   priceValue = price.get_attribute("value"); 
   print('looking for description value')
   try:
-    desc = WebDriverWait(driver, 10).until(
+    desc = WebDriverWait(driver, 1).until(
         EC.presence_of_element_located((By.XPATH, "//textarea")) 
     )
   except:
@@ -191,7 +191,7 @@ def getAds():
   for x in range(10):
     if x == 0:
       try:
-        image = WebDriverWait(driver, 10).until(
+        image = WebDriverWait(driver, 1).until(
             EC.presence_of_element_located((By.XPATH, "//div[3]/div[2]/div/div/div/div/div/img")) 
         )
       except:
@@ -203,7 +203,7 @@ def getAds():
 
     if x > 0:
       try:
-        image = WebDriverWait(driver, 10).until(
+        image = WebDriverWait(driver, 1).until(
             EC.presence_of_element_located((By.XPATH, imagePathJoin)) 
         )
       except:
@@ -220,7 +220,7 @@ def getAds():
     x += 1
     if x == 1:
       try:
-        tag = WebDriverWait(driver, 10).until(
+        tag = WebDriverWait(driver, 1).until(
             EC.presence_of_element_located((By.XPATH, "//label/div/div/div/div/div/div/div/span/span")) 
         )
       except:
@@ -232,7 +232,7 @@ def getAds():
 
     if x > 1:
       try:
-        tag = WebDriverWait(driver, 10).until(
+        tag = WebDriverWait(driver, 1).until(
             EC.presence_of_element_located((By.XPATH, tagPathJoin)) 
         )
       except:
@@ -263,8 +263,17 @@ def makeAdFile():
 def makeAdDir():
   adDirBroke = 'adDir', str(counter)
   adDir = ''.join(adDirBroke)
-  os.mkdir(adDir)
-  os.chdir(adDir)
+  try:
+    os.mkdir(adDir)
+  except:
+    print("ERROR 0021: Could not make directory ", str(adDir), ". Check to make sure it doesn't already exist")
+    sys.exit()
+  
+  try:
+    os.chdir(adDir)
+  except:
+    print("ERROR 0022: Could not change directory to ", str(adDir))
+    sys.exit()
 
 def dump():
   global counter, adFile, osDir
@@ -291,13 +300,16 @@ def imageSave():
 
     if r.status_code == 200:
         r.raw.decode_content = True
-    
-        with open(fileName,'wb') as f:
-            shutil.copyfileobj(r.raw, f)
+        
+        try:
+          with open(fileName,'wb') as f:
+              shutil.copyfileobj(r.raw, f)
+        except:
+          print("ERROR 0023: could not create image. Make sure this image doesn't already exist in ", str(os.getcwd()))
         
         print('Image ', str(x + 1), ' sucessfully Downloaded')
     else:
-        print('Image ', str(x + 1), ' Couldn\'t be retreived')
+        print('ERROR 00', str(24 + x), ': Image ', str(x + 1), ' Couldn\'t be retreived')
 
 
 
@@ -315,8 +327,9 @@ while moreAds == True:
   pyautogui.keyDown('alt')
   pyautogui.press('left')
   pyautogui.keyUp('alt')
-  
-sys.exit()
+
+print('Closing program')  
+driver.quit()
 
 
 
