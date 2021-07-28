@@ -28,7 +28,7 @@ import requests
 import shutil 
 
 parser = argparse.ArgumentParser(description='Deleting an ad off Facebook')
-parser.add_argument('--addir',type=str, help='Diectory of the folder with the .yaml file for your login info, and where you want the dump.yaml files to be created.')
+parser.add_argument('--addir',type=str, required=True, help='Diectory of the folder with the .yaml file for your login info, and where you want the dump.yaml files to be created.')
 args = parser.parse_args()
 
 fileDir = args.addir

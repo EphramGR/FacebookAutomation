@@ -40,12 +40,12 @@ except:
   print("ERROR 0001: Invalid directory")
   sys.exit()
 
-try:
-  options = Options()
-  driver = webdriver.Firefox(options=options) 
-except:
-  print("ERROR 0003: Either the Firefox or GeckoDriver directory was invalid")
-  sys.exit()
+#try:
+options = Options()
+driver = webdriver.Firefox(options=options) 
+#except:
+  #print("ERROR 0003: Either the Firefox or GeckoDriver directory was invalid")
+  #sys.exit()
 
 new = "//div[4]/div/div[2]/div/div/div[4]/div/div/div/div/div/div/div/div/div/div/div/div/div/div/span"
 likeNew = "//div[2]/div/div/div[4]/div/div/div/div/div/div/div/div/div/div/div[2]/div/div/div/span"
@@ -122,7 +122,10 @@ def login():
   except:
     print("ERROR 0007: Could not locate and/or click the login box")
     sys.exit()
-
+  
+  #time.sleep(7)
+  #pyautogui.click(x=379, y=210)
+  #pyautogui.click(x=488, y=205)
 
 def gotoMarketplace():
 
@@ -130,6 +133,7 @@ def gotoMarketplace():
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.LINK_TEXT, "Marketplace"))
     )
+    time.sleep(2)
     element.click()
   except:
     print("ERROR 0008: Could not find and click the Marketplace button")
@@ -266,24 +270,24 @@ def adPhotos():
   try:
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//label/div/div/input"))
-    )
-    element.click()
-
-    element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "//div[3]/div/div[2]/div/div/div[3]/div[2]/div/div/div"))
         )
-
     element.click()
+  except:
+    print("ERROR 0029: could not move towards the upload image screen")
 
-    element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "//input[@type='file']"))
+  try:
+    element = WebDriverWait(driver, 2).until(
+        #EC.presence_of_element_located((By.XPATH, "//input[@type='file']"))
+        EC.presence_of_element_located((By.CSS_SELECTOR, "div.bi6gxh9e:nth-child(4) > div:nth-child(1) > div:nth-child(1)"))
         )
-
   except:
     print("ERROR 0021: Failed to navigate to the upload image screen")
-    sys.exit()
+    #sys.exit()
+  
+  driver.find_element(By.CSS_SELECTOR, "div.bi6gxh9e:nth-child(4) > div:nth-child(1) > div:nth-child(1)").send_keys('/home/ephram/FacebookAutomation/oakChair/oakChair.png')  
+  #element.click()
+  element.send_keys('/home/ephram/FacebookAutomation/oakChair/oakChair.png')
 
-  element.send_keys('/home/ephram/FacebookAutomation/testItem/TestPhoto.png/')
 
   #postPhoto(element)
 
@@ -351,6 +355,10 @@ def postPhoto(element):
     print("ERROR 0023: Failed to send keys to the image uploader, and/or close it.")
     sys.exit()
 
+def getPos():
+  while True:
+    print(pyautogui.position())
+    time.sleep(2)
 
 for x in range(len(fileDir)):
   if x > 0:
@@ -372,12 +380,12 @@ for x in range(len(fileDir)):
 
   #publish()
   
-  try:
-    element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "//div[3]/div/div[2]/div/div/div[3]/div[2]/div/div/div"))
-        )
-  except:
-    print("ERROR 0026: Failed to locate home button")
+  #try:
+    #element = WebDriverWait(driver, 10).until(
+        #EC.presence_of_element_located((By.XPATH, "//div[3]/div/div[2]/div/div/div[3]/div[2]/div/div/div"))
+        #)
+  #except:
+    #print("ERROR 0026: Failed to locate home button")
   
   #if x == (len(fileDir) - 1):
     #driver.quit()
