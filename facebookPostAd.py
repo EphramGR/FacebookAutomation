@@ -14,7 +14,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from selenium.webdriver.firefox.options import Options
-#from selenium.webdriver.chrome.options import Options
 
 import time
 import pyautogui
@@ -40,12 +39,12 @@ except:
   print("ERROR 0001: Invalid directory")
   sys.exit()
 
-#try:
-options = Options()
-driver = webdriver.Firefox(options=options) 
-#except:
-  #print("ERROR 0003: Either the Firefox or GeckoDriver directory was invalid")
-  #sys.exit()
+try:
+  options = Options()
+  driver = webdriver.Firefox(options=options) 
+except:
+  print("ERROR 0003: Either the Firefox or GeckoDriver directory was invalid")
+  sys.exit()
 
 new = "//div[4]/div/div[2]/div/div/div[4]/div/div/div/div/div/div/div/div/div/div/div/div/div/div/span"
 likeNew = "//div[2]/div/div/div[4]/div/div/div/div/div/div/div/div/div/div/div[2]/div/div/div/span"
@@ -122,10 +121,6 @@ def login():
   except:
     print("ERROR 0007: Could not locate and/or click the login box")
     sys.exit()
-  
-  #time.sleep(7)
-  #pyautogui.click(x=379, y=210)
-  #pyautogui.click(x=488, y=205)
 
 def gotoMarketplace():
 
@@ -133,7 +128,7 @@ def gotoMarketplace():
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.LINK_TEXT, "Marketplace"))
     )
-    time.sleep(2)
+    time.sleep(0.5)
     element.click()
   except:
     print("ERROR 0008: Could not find and click the Marketplace button")
@@ -277,19 +272,14 @@ def adPhotos():
 
   try:
     element = WebDriverWait(driver, 2).until(
-        #EC.presence_of_element_located((By.XPATH, "//input[@type='file']"))
-        EC.presence_of_element_located((By.CSS_SELECTOR, "div.bi6gxh9e:nth-child(4) > div:nth-child(1) > div:nth-child(1)"))
+        EC.presence_of_element_located((By.CSS_SELECTOR, ".hjkfelp1"))
         )
+    element.click()
   except:
     print("ERROR 0021: Failed to navigate to the upload image screen")
-    #sys.exit()
+    sys.exit()
   
-  driver.find_element(By.CSS_SELECTOR, "div.bi6gxh9e:nth-child(4) > div:nth-child(1) > div:nth-child(1)").send_keys('/home/ephram/FacebookAutomation/oakChair/oakChair.png')  
-  #element.click()
-  element.send_keys('/home/ephram/FacebookAutomation/oakChair/oakChair.png')
-
-
-  #postPhoto(element)
+  uploadPhoto()
 
 
 def publish():
@@ -319,6 +309,7 @@ def changeCWD():
   os.chdir(fileDir[x])
 
 def postPhoto(element):
+  #outdated
   f = []
 
   for x in range(len(adInfo['photos'])):
@@ -360,6 +351,73 @@ def getPos():
     print(pyautogui.position())
     time.sleep(2)
 
+def uploadPhoto():
+  for w in range(len(adInfo['photos'])):
+    if w > 0:
+      try:
+        element = WebDriverWait(driver, 10).until(
+
+            EC.presence_of_element_located((By.XPATH, "//span/div/div/div/i"))
+            )
+        element.click()
+      except:
+        print("ERROR 0031: Failed to navigate to upload image screen number", str(w + 1))
+        sys.exit()
+      time.sleep(0.2)
+      
+  
+    folders = []
+
+    path = (os.getcwd())
+
+
+    while True:
+      path, folder = os.path.split(path)
+  
+      if folder != "":
+        folders.append(folder)
+    
+      elif path != "":
+        folders.append(path)
+    
+        break
+      
+    folders.reverse()
+    folders.append(adInfo['photos'][w])
+    for y in range(3):
+      del folders[0]
+        
+    time.sleep(0.2)
+
+    for x in range(20):
+      pyautogui.press('up')
+      pyautogui.press('up')
+      pyautogui.press('tab')
+    time.sleep(0.2)
+      
+    pyautogui.press('enter')
+    pyautogui.keyDown('shift')
+    pyautogui.press('tab')
+    pyautogui.press('tab')
+    pyautogui.press('tab')
+    pyautogui.keyUp('shift')
+    time.sleep(0.2)
+    pyautogui.press('enter')
+      
+    time.sleep(0.2)
+    for y in range(len(folders)):
+      pyautogui.typewrite(folders[y], interval = 0.02)
+      time.sleep(0.4)
+      pyautogui.press('down')
+      pyautogui.press('enter')
+      time.sleep(0.4)
+      if y != (len(folders) - 1):
+        for z in range(3):
+          pyautogui.press('tab')
+        time.sleep(0.4)
+        pyautogui.press('enter')
+        time.sleep(0.2)
+  
 for x in range(len(fileDir)):
   if x > 0:
     changeCWD()
@@ -378,14 +436,14 @@ for x in range(len(fileDir)):
 
   adPhotos()
 
-  #publish()
+  publish()
   
-  #try:
-    #element = WebDriverWait(driver, 10).until(
-        #EC.presence_of_element_located((By.XPATH, "//div[3]/div/div[2]/div/div/div[3]/div[2]/div/div/div"))
-        #)
-  #except:
-    #print("ERROR 0026: Failed to locate home button")
+  try:
+    element = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//div[3]/div/div[2]/div/div/div[3]/div[2]/div/div/div"))
+        )
+  except:
+    print("ERROR 0026: Failed to locate home button")
   
-  #if x == (len(fileDir) - 1):
-    #driver.quit()
+  if x == (len(fileDir) - 1):
+    driver.quit()
